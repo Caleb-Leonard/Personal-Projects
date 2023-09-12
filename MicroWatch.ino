@@ -3,7 +3,7 @@
 
 #include <SPI.h>
 #include <Wire.h>
-#include <Time.h>
+#include <TimeLib.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_NeoPixel.h>
 #include <Adafruit_SSD1306.h>
@@ -14,10 +14,11 @@
 
 #define NUMPIXELS 1 
 #define NEOPIXEL_PIN 2
-#define NEOPIXEL_POWER 8
+//#define NEOPIXEL_POWER 8
 
 #define tiltSwitch 4
 
+#define OLED_RESET -1
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 #define SCREEN_ADDRESS 0x3D
@@ -26,7 +27,6 @@ Adafruit_NeoPixel pixels(NUMPIXELS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
-
 void setup() {
   Serial.begin(115200);
 #if defined(NEOPIXEL_POWER)
@@ -34,34 +34,34 @@ void setup() {
   digitalWrite(NEOPIXEL_POWER, HIGH);
 #endif
 
-pinMode(tiltSwitch, INPUT);
+  pinMode(tiltSwitch, INPUT);
 
-   pixels.begin();
-   pixels.setBrightness(15);
+  pixels.begin();
+  pixels.setBrightness(15);
 
-  
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  
 
   digitalWrite(tiltSwitch, HIGH);
-  tiltSwitch = digitalRead(4);
+  tiltSwitch == digitalRead(4);
 
   if (tiltSwitch == LOW) {
   while (tiltSwitch == LOW) { 
-    powerCycle();
+    void powerCycle();
   }
   
   } 
   else {
     while (tiltSwitch == HIGH) { 
-      drawTimeDate();
+      void drawTimeDate();
   }
-  
+  }
 }
 
-void powerCycle(void) {
+void powerCycle() {
   pixels.fill(0xFF0000);
   pixels.show();
   delay(500);
@@ -76,33 +76,30 @@ void powerCycle(void) {
   
   pixels.fill(0x00FF00);
   pixels.show();
-  delay(500);
+  delay(5000);
 
   pixels.fill(0x000000);
   pixels.show();
-  delay(500);
+  delay(5000);
   
 }
 
-void drawTimeDate(void) {
+void drawTimeDate() {
+  time_t t = now();
+  
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor (SSD1306_WHITE);
   display.setCursor(63,15);
-  display.print(F(hour());
+  display.print(F(hour(t)));
   display.print(F(":"));
-  display.print(F(minute());
+  display.print(F(minute(t)));
 
  
   display.setCursor(67,15);
-  display.print(F(monthStr(month());
+  display.print(F(monthStr(month(t))));
   display.print(F(" "));
-  display.print(F(dayStr(weekday());
+  display.print(F(dayStr(weekday(t))));
   display.print(F(", "));
-  display.print(F(year());
-}
-
-void I2CAddressBook(void){
-
-  
+  display.print(F(year(t)));
 }
